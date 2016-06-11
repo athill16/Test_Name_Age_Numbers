@@ -4,20 +4,30 @@ class MyApp < Sinatra::Base
 
 	enable :sessions
 
-
 	get '/' do
 		erb :name_number_game
 	end
 
 	post '/input' do	
 		session[:name] = params[:user_name]
-		erb :get_age, :locals => {:name => session[:name]}
+		redirect '/age?name=' + session[:name]
 	end 
+
+	get '/age' do
+		session[:name] = params[:name]
+		erb :get_age, :locals => {:name => session[:name]}
+	end
 
 	post '/age' do
 		session[:age] = params[:user_age]
-		erb :favorite_numbers, :locals => {:age => session[:age], :name => session[:name]}
+		redirect '/favnums?name=' + session[:name] + '&age=' + session[:age]
 	end 
+
+	get '/favnums' do
+		session[:name] = params[:name]
+		session[:age] = params[:age]
+		erb :favorite_numbers, :locals => {:age => session[:age], :name => session[:name]}
+	end
 
 	post '/favorite_numbers' do
 		favorite_numbers1 = params[:user_fav_number1]
